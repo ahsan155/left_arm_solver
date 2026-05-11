@@ -179,10 +179,9 @@ vcs import --recursive < moveit2_tutorials/moveit2_tutorials.repos
 ### 4. Clone this repository
 
 ```bash
-git clone https://github.com/<your-org>/left_arm_solver
+git clone https://github.com/ahsan155/left_arm_solver
 ```
 
-Replace `<your-org>` with the actual GitHub organisation or user name.
 
 ### 5. Install ROS dependencies
 

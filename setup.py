@@ -12,6 +12,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         ("share/" + package_name + "/launch", [
             "launch/moveit_demo.launch.py",
+            "launch/moveit_real.launch.py",
             "launch/waypoint_node.launch.py",
         ]),
         ("share/" + package_name + "/launch/moveit_launch", [

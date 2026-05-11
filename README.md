@@ -80,7 +80,7 @@ Known reachable workspace (relative to `torso_link`):
 |------|---------|---------|------|
 | x | 0.19 | 0.34 | forward reach |
 | y | 0.14 | 0.41 | right → left |
-| z | 0.001 | 0.20 | lowest → highest |
+| z | 0.001 | 0.50 | lowest → highest |
 
 ### `/arm_joint_cmd` Joint Order and Limits
 
@@ -107,6 +107,108 @@ The 17-element output array maps to the following joints:
 | 16 | `right_wrist_yaw_joint` | -1.614 | 1.614 |
 
 Only the 7 left-arm joints (indices 3–9) are assigned planned values; all other slots are set to `0.0` (hold position). All values are clamped to the limits above before publishing.
+
+---
+
+## Prerequisites
+
+**Operating System:** Ubuntu 22.04 LTS
+
+**ROS 2 Humble Hawksbill** must be installed before anything else.
+Follow the official installation guide: https://docs.ros.org/en/humble/Installation.html
+
+After installing ROS 2, install the required build tools:
+
+```bash
+sudo apt update && sudo apt install -y \
+  build-essential \
+  cmake \
+  git \
+  python3-colcon-common-extensions \
+  python3-colcon-mixin \
+  python3-rosdep \
+  python3-setuptools \
+  python3-vcstool
+
+sudo rosdep init
+rosdep update
+
+colcon mixin add default \
+  https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+colcon mixin update default
+```
+
+Remove any pre-installed MoveIt 2 Debian packages — they conflict with a source build:
+
+```bash
+sudo apt remove ros-humble-moveit*
+```
+
+---
+
+## Build Project
+
+> **Note:** MoveIt 2 is built from source. The build takes 20–30 minutes depending on your machine. 32 GB of RAM is recommended; on lower-memory systems append `--parallel-workers 2` to the `colcon build` command.
+
+### 1. Create the workspace
+
+```bash
+mkdir -p ~/ws_moveit2/src
+cd ~/ws_moveit2/src
+```
+
+### 2. Clone MoveIt 2 source and pull all dependencies
+
+Clone MoveIt 2 and use its `.repos` file to pull the full dependency set — this includes `moveit_msgs`, `moveit_resources`, and all other packages that do not come with the tutorials repo ([source build guide](https://moveit.ai/install-moveit2/source/)):
+
+```bash
+export ROS_DISTRO=humble
+git clone https://github.com/moveit/moveit2.git -b $ROS_DISTRO
+for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
+```
+
+### 3. Clone MoveIt 2 tutorials and pull tutorial dependencies
+
+The tutorials repository adds additional demo packages and a supplementary `.repos` file:
+
+```bash
+git clone -b humble https://github.com/moveit/moveit2_tutorials
+vcs import --recursive < moveit2_tutorials/moveit2_tutorials.repos
+```
+
+### 4. Clone this repository
+
+```bash
+git clone https://github.com/<your-org>/left_arm_solver
+```
+
+Replace `<your-org>` with the actual GitHub organisation or user name.
+
+### 5. Install ROS dependencies
+
+```bash
+cd ~/ws_moveit2
+rosdep install -r --from-paths src --ignore-src --rosdistro humble -y
+```
+
+### 6. Build
+
+```bash
+source /opt/ros/humble/setup.bash
+colcon build --mixin release
+```
+
+### 7. Source the workspace
+
+```bash
+source ~/ws_moveit2/install/setup.bash
+```
+
+Add this line to `~/.bashrc` to avoid sourcing it manually on every new terminal:
+
+```bash
+echo 'source ~/ws_moveit2/install/setup.bash' >> ~/.bashrc
+```
 
 ---
 

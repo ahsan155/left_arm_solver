@@ -4,10 +4,13 @@
   <name>left_arm_solver</name>
   <version>0.1.0</version>
   <description>MoveIt2-backed left arm waypoint follower publishing Unitree G1 /arm_joint_cmd.</description>
-  <maintainer email="user@example.com">user</maintainer>
+  <maintainer email="ahsan@scaledrive.ai">Ahsan Ahmed</maintainer>
   <license>BSD-3-Clause</license>
 
   <exec_depend>rclpy</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>moveit_configs_utils</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>

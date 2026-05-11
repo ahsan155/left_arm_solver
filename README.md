@@ -1,5 +1,7 @@
 # MoveIt Arm Solver
 
+https://github.com/user-attachments/assets/7ada2926-25ce-4d89-92aa-5956ac9c9b8a
+
 A ROS 2 motion planning solver for the **Unitree G1 humanoid robot left arm**. Given a sequence of Cartesian waypoints, the node plans collision-free joint trajectories using MoveIt 2, streams the intermediate trajectory points to the robot, and waits at each waypoint before moving to the next.
 
 ---

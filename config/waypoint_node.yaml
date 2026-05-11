@@ -1,0 +1,75 @@
+# Parameters for g1_left_arm_waypoint_node
+# Load with: ros2 run left_arm_solver g1_left_arm_waypoint_node --ros-args --params-file <path>
+# Or use the provided launch file: ros2 launch left_arm_solver waypoint_node.launch.py
+
+/**:
+  ros__parameters:
+
+    # ── Topics ────────────────────────────────────────────────────────────────
+    # Source of current joint positions. Use /joint_states_ordered when the
+    # ordered_joint_states_bridge is running (demo), or /joint_states for the
+    # real robot.
+    joint_states_topic: "/joint_states_ordered"
+
+    # Unitree arm command output topic (std_msgs/Float32MultiArray, 17 joints).
+    arm_joint_cmd_topic: "/arm_joint_cmd"
+
+    # ── MoveIt services ───────────────────────────────────────────────────────
+    plan_kinematic_path_service: "/plan_kinematic_path"
+    compute_fk_service: "/compute_fk"
+
+    # ── Planning group / kinematics ───────────────────────────────────────────
+    planning_group: "left_arm"
+    eef_link: "left_wrist_yaw_link"
+
+    # Frame in which waypoint XYZ coordinates and FK results are expressed.
+    planning_frame: "torso_link"
+
+    # ── Goal tolerances ───────────────────────────────────────────────────────
+    # Radius of the acceptable sphere around each target XYZ (metres).
+    position_goal_radius_m: 0.02
+
+    # Maximum rotation error around each axis at the EE (radians, ~3 degrees).
+    orientation_tolerance_rad: 0.05
+
+    # ── Timing ────────────────────────────────────────────────────────────────
+    # Seconds to hold the arm at each waypoint before moving to the next one.
+    hold_at_waypoint_sec: 3.0
+
+    # Rate at which /arm_joint_cmd is published (Hz). Also the streaming
+    # resolution when replaying intermediate trajectory points.
+    cmd_publish_hz: 20.0
+
+    # ── OMPL / time-parameterization ──────────────────────────────────────────
+    # Maximum seconds the planner may spend on a single waypoint.
+    planning_time_sec: 10.0
+
+    # Number of independent planning attempts per waypoint.
+    num_planning_attempts: 8
+
+    # Fraction of the joint velocity/acceleration limits to use (0.0–1.0).
+    max_velocity_scaling: 0.4
+    max_acceleration_scaling: 0.4
+
+    # ── Start-state requirements ──────────────────────────────────────────────
+    # Joint names that must be present on joint_states_topic before FK and
+    # planning are attempted. Default: the 7 left-arm joints only.
+    joint_states_required_for_start:
+      - "left_shoulder_pitch_joint"
+      - "left_shoulder_roll_joint"
+      - "left_shoulder_yaw_joint"
+      - "left_elbow_joint"
+      - "left_wrist_roll_joint"
+      - "left_wrist_pitch_joint"
+      - "left_wrist_yaw_joint"
+
+    # Position used for any UNITREE_CMD_JOINTS slot that is absent from
+    # joint_states_topic (e.g. waist joints in simulation).
+    default_position_if_joint_missing: 0.0
+
+    # ── Controller execution (demo / simulation only) ─────────────────────────
+    # When true, the planned trajectory is sent to controller_action so the
+    # Scene Robot in RViz moves. Set false on the real Unitree G1 (the robot
+    # SDK handles execution; this node only publishes /arm_joint_cmd).
+    execute_via_controller: true
+    controller_action: "/left_arm_controller/follow_joint_trajectory"
